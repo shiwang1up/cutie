@@ -4,46 +4,48 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./globals.css";
 
+// `right` = the catchable answer. `wrong` = the runaway that dodges + is unclickable.
+// Side placement (left vs right on screen) is randomized at runtime.
 const QUESTIONS = [
   {
     num: "Getting Nails done vs. Getting Makeup", title: "Nails or Makeup?",
-    a: "Getting Nails done in Ranibagh 💅", b: "Applying Makeup in PG 🎨", right: "a"
+    right: "Getting Nails done in Ranibagh 💅", wrong: "Applying Makeup in PG 🎨",
   },
   {
     num: "Skin vs. Hair", title: "Skin or Hair?",
-    a: "Doing skin care  ✨", b: "Getting hairs done 💇♀️", right: "a"
+    right: "Doing skin care  ✨", wrong: "Getting hairs done 💇♀️",
   },
   {
     num: "Bags or Shoes?", title: "Bags or Shoes?",
-    a: "Designer handbag 👜", b: "Sports Shoes 👠", right: "a"
+    right: "Designer handbag 👜", wrong: "Sports Shoes 👠",
   },
   {
     num: "tulips and Lilies vs. dairy milk", title: "tulips and Lilies or dairy milk?",
-    a: "Fresh tulips and Lilies 🌷", b: "dairy milk chocolate 🍫", right: "a"
+    right: "Fresh tulips and Lilies 🌷", wrong: "dairy milk chocolate 🍫",
   },
   {
     num: "Surprises vs. Preplans", title: "Surprises or Preplanned?",
-    a: "Surprise visits 💫", b: "Pre-planned drinks 📅", right: "a"
+    right: "Surprise visits 💫", wrong: "Pre-planned drinks 📅",
   },
   {
     num: "Car Dashboard photoshoot  vs. Mirror photoshot", title: "Car Dashboard photoshoot  or Mirror photoshot",
-    a: "Dashboard + Snapchat 📸", b: "Mirror selfies 🪞", right: "a"
+    right: "Dashboard + Snapchat 📸", wrong: "Mirror selfies 🪞",
   },
   {
     num: "Vanilla flavour vs. Strawberry flavour", title: "Vanilla or Strawberry ?",
-    a: "Vanilla flavour 🍦", b: "Strawberry cheesecake 🍓", right: "a"
+    right: "Vanilla flavour 🍦", wrong: "Strawberry cheesecake 🍓",
   },
   {
     num: "White vs. Red Sauce", title: "White or Red Sauce?",
-    a: "Creamy white sauce pasta 🍝", b: "Red sauce pasta 🍅", right: "a"
+    right: "Creamy white sauce pasta 🍝", wrong: "Red sauce pasta 🍅",
   },
   {
     num: "Hot Choc vs. Latté", title: "Hot Choc or Latté?",
-    a: "Hot chocolate ☕", b: "Coffee Latté 🥤", right: "a"
+    right: "Hot chocolate ☕", wrong: "Coffee Latté 🥤",
   },
   {
     num: "Hand vs. Music", title: "My Hand or the Music?",
-    a: "Hold my hand 🤝", b: "Pick the playlist 🎶", right: "a"
+    right: "Hold my hand 🤝", wrong: "Pick the playlist 🎶",
   },
 ];
 
@@ -300,15 +302,18 @@ function Quiz({ setBurst, capture }) {
   const [i, setI] = useState(0);
   const [answers, setAnswers] = useState({});
   const [done, setDone] = useState(false);
+  // One stable random side order per question, decided on Quiz mount.
+  const [sideOrders] = useState(() =>
+    QUESTIONS.map(() => (Math.random() < 0.5 ? ["right", "wrong"] : ["wrong", "right"]))
+  );
   const q = QUESTIONS[i];
   const chosen = answers[i];
 
-  function pick(side) {
+  function pick(role) {
     if (chosen) return;
-    setAnswers((p) => ({ ...p, [i]: side }));
-    capture?.(`q${String(i + 1).padStart(2, "0")}-${side}`);
-    const cap = (side === "a" ? q.a : q.b)
-      .replace(/[\u{1F300}-\u{1FAFF}]/gu, "").trim();
+    setAnswers((p) => ({ ...p, [i]: role }));
+    capture?.(`q${String(i + 1).padStart(2, "0")}`);
+    const cap = q[role].replace(/[\u{1F300}-\u{1FAFF}]/gu, "").trim();
     const sources = (q.imgs && q.imgs.length > 0)
       ? q.imgs
       : (PHOTO_MAP[i + 1] && PHOTO_MAP[i + 1].length > 0)
@@ -409,21 +414,20 @@ function Quiz({ setBurst, capture }) {
           <p className="qline">{q.line}</p>
 
           <div className="opts">
-            {["a", "b"].map((side) => {
-              const cls = `opt ${chosen === side ? "chosen" : ""} ${chosen && chosen !== side ? "faded" : ""}`;
-              const isRight = side === q.right;
-              const label = side === "a" ? q.a : q.b;
-              if (isRight) {
+            {sideOrders[i].map((role) => {
+              const cls = `opt ${chosen === role ? "chosen" : ""} ${chosen && chosen !== role ? "faded" : ""}`;
+              const label = q[role];
+              if (role === "right") {
                 return (
-                  <motion.button key={side} className={cls}
-                    whileTap={{ scale: 0.94 }} onClick={() => pick(side)}>
+                  <motion.button key={role} className={cls}
+                    whileTap={{ scale: 0.94 }} onClick={() => pick(role)}>
                     {label}
                   </motion.button>
                 );
               }
               return (
-                <RunawayOption key={side} className={cls}
-                  frozen={!!chosen} onClick={() => pick(side)}>
+                <RunawayOption key={role} className={cls}
+                  frozen={!!chosen} onClick={() => pick(role)}>
                   {label}
                 </RunawayOption>
               );
