@@ -302,10 +302,18 @@ function Quiz({ setBurst, capture }) {
   const [i, setI] = useState(0);
   const [answers, setAnswers] = useState({});
   const [done, setDone] = useState(false);
-  // One stable random side order per question, decided on Quiz mount.
-  const [sideOrders] = useState(() =>
-    QUESTIONS.map(() => (Math.random() < 0.5 ? ["right", "wrong"] : ["wrong", "right"]))
-  );
+  // Pre-build a balanced shuffle: half the questions get right-on-left,
+  // half get right-on-right, then Fisher-Yates shuffle the assignment.
+  // Guarantees a real mix instead of relying on per-question 50/50 luck.
+  const [sideOrders] = useState(() => {
+    const n = QUESTIONS.length;
+    const flips = Array.from({ length: n }, (_, k) => k < Math.floor(n / 2));
+    for (let k = n - 1; k > 0; k--) {
+      const j = Math.floor(Math.random() * (k + 1));
+      [flips[k], flips[j]] = [flips[j], flips[k]];
+    }
+    return flips.map((f) => (f ? ["wrong", "right"] : ["right", "wrong"]));
+  });
   const q = QUESTIONS[i];
   const chosen = answers[i];
 
