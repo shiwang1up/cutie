@@ -303,10 +303,8 @@ h1.hand {
   .navrow { margin-top: 1.2rem; }
   .ghost { font-size: 1.15rem; }
 
-  /* pile sits behind the card on mobile so taps reach back/next reliably */
-  .pile { z-index: 1; }
-  .pile-photo { width: 140px; padding: 8px 8px 22px; }
-  .pile-photo img { height: 140px; }
+  .pile-photo { width: 130px; padding: 8px 8px 22px; }
+  .pile-photo img { height: 130px; }
   .pile-cap { font-size: 1rem; }
   .pile-tape { width: 52px; height: 14px; top: -8px; }
 }

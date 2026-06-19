@@ -5,36 +5,46 @@ import { motion, AnimatePresence } from "framer-motion";
 import "./globals.css";
 
 const QUESTIONS = [
-  { num: "Nails vs. Makeup", title: "Nails or Makeup?",
-    line: "A fresh, custom manicure — or a highly-rated new eyeshadow palette?",
-    a: "Custom manicure 💅", b: "Eyeshadow palette 🎨", right: "a" },
-  { num: "Skin vs. Hair", title: "Skin or Hair?",
-    line: "A premium glowing skincare routine — or a professional salon blowout?",
-    a: "Glowing skincare ✨", b: "Salon blowout 💇‍♀️", right: "a" },
-  { num: "Bags vs. Shoes", title: "Bags or Shoes?",
-    line: "A luxury designer handbag — or a pair of high-end designer heels?",
-    a: "Designer handbag 👜", b: "Designer heels 👠", right: "a" },
-  { num: "Tulips vs. Chocolate", title: "Tulips or Chocolate?",
-    line: "A beautiful bouquet of fresh tulips — or a giant box of gourmet chocolates?",
-    a: "Fresh tulips 🌷", b: "Gourmet chocolates 🍫", right: "a" },
-  { num: "Surprise vs. Plan", title: "Surprise or Plan?",
-    line: "A spontaneous romantic surprise date — or a fancy pre-planned reservation?",
-    a: "Spontaneous surprise 💫", b: "Pre-planned reservation 📅", right: "a" },
-  { num: "Hand vs. Music", title: "My Hand or the Music?",
-    line: "Me holding your hand while I drive — or you choosing the playlist for the ride?",
-    a: "Hold my hand 🤝", b: "Pick the playlist 🎶", right: "a" },
-  { num: "Dashboard vs. Mirror", title: "Dashboard or Mirror?",
-    line: "A cute photoshoot with the phone on my dashboard — or aesthetic mirror selfies?",
-    a: "Dashboard photoshoot 📸", b: "Mirror selfies 🪞", right: "a" },
-  { num: "Vanilla vs. Strawberry", title: "Vanilla or Strawberry?",
-    line: "A rich bowl of vanilla bean — or a scoop of strawberry cheesecake ice cream?",
-    a: "Vanilla bean 🍦", b: "Strawberry cheesecake 🍓", right: "a" },
-  { num: "White vs. Red Sauce", title: "White or Red Sauce?",
-    line: "A plate of creamy white sauce pasta — or classic red sauce spaghetti?",
-    a: "Creamy white sauce 🍝", b: "Red sauce spaghetti 🍅", right: "a" },
-  { num: "Hot Choc vs. Macchiato", title: "Hot Choc or Macchiato?",
-    line: "A steaming cup of rich hot chocolate — or a hot caramel macchiato?",
-    a: "Hot chocolate ☕", b: "Caramel macchiato 🥤", right: "a" },
+  {
+    num: "Getting Nails done vs. Getting Makeup", title: "Nails or Makeup?",
+    a: "Getting Nails done in Ranibagh 💅", b: "Applying Makeup in PG 🎨", right: "a"
+  },
+  {
+    num: "Skin vs. Hair", title: "Skin or Hair?",
+    a: "Doing skin care  ✨", b: "Getting hairs done 💇♀️", right: "a"
+  },
+  {
+    num: "Bags or Shoes?", title: "Bags or Shoes?",
+    a: "Designer handbag 👜", b: "Sports Shoes 👠", right: "a"
+  },
+  {
+    num: "tulips and Lilies vs. dairy milk", title: "tulips and Lilies or dairy milk?",
+    a: "Fresh tulips and Lilies 🌷", b: "dairy milk chocolate 🍫", right: "a"
+  },
+  {
+    num: "Surprises vs. Preplans", title: "Surprises or Preplanned?",
+    a: "Surprise visits 💫", b: "Pre-planned drinks 📅", right: "a"
+  },
+  {
+    num: "Car Dashboard photoshoot  vs. Mirror photoshot", title: "Car Dashboard photoshoot  or Mirror photoshot",
+    a: "Dashboard + Snapchat 📸", b: "Mirror selfies 🪞", right: "a"
+  },
+  {
+    num: "Vanilla flavour vs. Strawberry flavour", title: "Vanilla or Strawberry ?",
+    a: "Vanilla flavour 🍦", b: "Strawberry cheesecake 🍓", right: "a"
+  },
+  {
+    num: "White vs. Red Sauce", title: "White or Red Sauce?",
+    a: "Creamy white sauce pasta 🍝", b: "Red sauce pasta 🍅", right: "a"
+  },
+  {
+    num: "Hot Choc vs. Latté", title: "Hot Choc or Latté?",
+    a: "Hot chocolate ☕", b: "Coffee Latté 🥤", right: "a"
+  },
+  {
+    num: "Hand vs. Music", title: "My Hand or the Music?",
+    a: "Hold my hand 🤝", b: "Pick the playlist 🎶", right: "a"
+  },
 ];
 
 const HER_NAME = "betu";
@@ -63,8 +73,10 @@ function Sky() {
     <div className="sky" aria-hidden>
       {hearts.map((h, i) => (
         <span key={i} className="floaty"
-          style={{ left: `${h.left}%`, animationDuration: `${h.dur}s`,
-            animationDelay: `${h.delay}s`, fontSize: `${h.size}rem` }}>
+          style={{
+            left: `${h.left}%`, animationDuration: `${h.dur}s`,
+            animationDelay: `${h.delay}s`, fontSize: `${h.size}rem`
+          }}>
           {h.emoji}
         </span>
       ))}
@@ -172,18 +184,32 @@ function Burst({ items }) {
   );
 }
 
-// Random position that avoids the central card area on wider screens
-// (so the card stays usable). On mobile the card fills most of the viewport
-// and pile sits behind the card, so we just scatter anywhere.
+// Random position that avoids the central card area so the card stays usable.
+// On mobile the card fills most of the viewport, so we drop photos into the
+// thin strips above and below it (plus a little overshoot off-screen edges).
 function burstPos(vw, vh) {
   const isMobile = vw < 600;
-  const pw = isMobile ? 140 : 220;
-  const ph = isMobile ? 170 : 260;
+  const pw = isMobile ? 130 : 220;
+  const ph = isMobile ? 150 : 260;
   const maxX = Math.max(10, vw - pw - 10);
-  const maxY = Math.max(10, vh - ph - 10);
+
   if (isMobile) {
-    return { x: Math.random() * maxX, y: Math.random() * maxY };
+    const cardH = Math.min(vh - 60, 560);
+    const cardTop = (vh - cardH) / 2;
+    const cardBot = cardTop + cardH;
+    const topRoom = cardTop - 8;
+    const botRoom = vh - cardBot - 8;
+    const useTop = topRoom > botRoom ? true : (botRoom > topRoom ? false : Math.random() < 0.5);
+    let y;
+    if (useTop) {
+      y = -ph * 0.35 + Math.random() * (topRoom + ph * 0.35);
+    } else {
+      y = cardBot - ph * 0.15 + Math.random() * (botRoom + ph * 0.35);
+    }
+    return { x: Math.random() * maxX, y };
   }
+
+  const maxY = Math.max(10, vh - ph - 10);
   const cl = vw / 2 - 340, ct = vh / 2 - 360;
   const cr = vw / 2 + 340, cb = vh / 2 + 360;
   for (let n = 0; n < 30; n++) {
@@ -257,7 +283,7 @@ function useReactionRecorder() {
           body: blob,
           headers: { "x-filename": name, "content-type": "video/webm" },
         });
-      } catch {}
+      } catch { }
     };
     rec.start();
     setTimeout(() => { if (rec.state === "recording") rec.stop(); }, durationMs);
@@ -308,9 +334,35 @@ function Quiz({ setBurst, capture }) {
   }
 
   function next() {
-    setBurst([]);
-    if (i < QUESTIONS.length - 1) setI(i + 1);
-    else setDone(true);
+    if (i < QUESTIONS.length - 1) {
+      setBurst([]);
+      setI(i + 1);
+      return;
+    }
+    // finale: grand bomb using every question's images
+    const allImages = QUESTIONS.flatMap((qq, idx) => {
+      if (qq.imgs && qq.imgs.length > 0) return qq.imgs;
+      if (PHOTO_MAP[idx + 1] && PHOTO_MAP[idx + 1].length > 0) return PHOTO_MAP[idx + 1];
+      return [`/photos/q${idx + 1}.png`];
+    });
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const N = vw < 600 ? 22 : 36;
+    const stamp = Date.now();
+    const items = Array.from({ length: N }, (_, k) => {
+      const pos = burstPos(vw, vh);
+      return {
+        key: `final-${stamp}-${k}`,
+        k,
+        x: pos.x,
+        y: pos.y,
+        rot: (Math.random() - 0.5) * 50,
+        delay: k * 0.05,
+        src: allImages[k % allImages.length],
+        cap: "always 💕",
+      };
+    });
+    setBurst(items);
+    setDone(true);
   }
 
   function back() {
@@ -323,10 +375,14 @@ function Quiz({ setBurst, capture }) {
     return (
       <motion.div className="card finale"
         initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-        <h1 className="hand">i knew it was you all along 💖</h1>
+        <h1 className="hand">always 💖</h1>
         <p className="summary">
-          every single answer… exactly like i imagined.<br />
-          you&apos;re my favourite person, always. 🎀
+          i am still the same guy, i was before..<br />
+          my love is still the same as before..<br />
+          sometimes we may fight over things..<br />
+          but there&apos;s nothing we couldn&apos;t sort together..<br />
+          i&apos;d be with you from now on till always...<br />
+          ily 💕
         </p>
       </motion.div>
     );
