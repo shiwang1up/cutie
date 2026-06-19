@@ -40,8 +40,8 @@ const QUESTIONS = [
     right: "Creamy white sauce pasta 🍝", wrong: "Red sauce pasta 🍅",
   },
   {
-    num: "Hot Choc vs. Latté", title: "Hot Choc or Latté?",
-    right: "Hot chocolate ☕", wrong: "Coffee Latté 🥤",
+    num: "Cooking food vs taking credit", title: "Cooking food vs taking my credit ",
+    right: "Taking my Credit 👨🏻‍🍳", wrong: "Cooking Food 🥘",
   },
   {
     num: "Hand vs. Music", title: "My Hand or the Music?",
@@ -395,6 +395,8 @@ function Quiz({ setBurst, capture }) {
           sometimes we may fight over things..<br />
           but there&apos;s nothing we couldn&apos;t sort together..<br />
           i&apos;d be with you from now on till always...<br />
+          i am ready to handle all your nakhre<br />
+          without complaints...<br />
           ily 💕
         </p>
       </motion.div>

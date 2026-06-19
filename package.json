@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "upload": "node --env-file=.env.local scripts/upload-assets.mjs"
+    "upload": "node --env-file=.env.local scripts/upload-assets.mjs",
+    "normalize": "node scripts/normalize-photos.mjs"
   },
   "dependencies": {
     "next": "14.2.5",
